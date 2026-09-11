@@ -5,18 +5,34 @@ from pydantic import BaseModel
 
 import openai
 from openai import OpenAI
+import configparser
 
+config_path = '/home/miasdz/桌面/py-test/study/config.ini'
+config = configparser.ConfigParser()
+config.read(config_path)
+
+llm_type = config['common']['llm']
+api_key = config[llm_type]['OPENAI_API_KEY']
+base_url = config[llm_type]['OPENAI_API_BASE_URL']
+model = config[llm_type]['OPENAI_API_MODEL']
+
+print(llm_type, base_url, model, api_key)
+
+client = OpenAI(
+    base_url=base_url,
+    api_key=api_key
+)
 
 class GetWeather(BaseModel):
     city: str
     country: str
 
 
-client = OpenAI()
+# client = OpenAI()
 
 
 with client.chat.completions.stream(
-    model="gpt-4o-2024-08-06",
+    model=model,
     messages=[
         {
             "role": "user",

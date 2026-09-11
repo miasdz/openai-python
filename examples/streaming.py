@@ -4,6 +4,23 @@ import asyncio
 
 from openai import OpenAI, AsyncOpenAI
 
+import configparser
+
+config_path = '/home/miasdz/桌面/py-test/study/config.ini'
+config = configparser.ConfigParser()
+config.read(config_path)
+
+llm_type = config['common']['llm']
+api_key = config[llm_type]['OPENAI_API_KEY']
+base_url = config[llm_type]['OPENAI_API_BASE_URL']
+model = config[llm_type]['OPENAI_API_MODEL']
+
+print(llm_type, base_url, model, api_key)
+
+client = OpenAI(
+    base_url=base_url,
+    api_key=api_key
+)
 # This script assumes you have the OPENAI_API_KEY environment variable set to a valid OpenAI API key.
 #
 # You can run this script from the root directory like so:
@@ -11,9 +28,9 @@ from openai import OpenAI, AsyncOpenAI
 
 
 def sync_main() -> None:
-    client = OpenAI()
+    # client = OpenAI()
     response = client.completions.create(
-        model="gpt-3.5-turbo-instruct",
+        model=model,
         prompt="1,2,3,",
         max_tokens=5,
         temperature=0,
@@ -33,7 +50,7 @@ def sync_main() -> None:
 async def async_main() -> None:
     client = AsyncOpenAI()
     response = await client.completions.create(
-        model="gpt-3.5-turbo-instruct",
+        model=model,
         prompt="1,2,3,",
         max_tokens=5,
         temperature=0,
